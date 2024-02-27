@@ -10,7 +10,9 @@ AtestCharacter::AtestCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
+	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
 	Camera->SetupAttachment(RootComponent);
+	APlayerController* ShooterPlayerController = Cast<APlayerController>(Controller);
 }
 
 // Called when the game starts or when spawned
@@ -30,19 +32,20 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	//It's just a thing for me to understand how to debug
 	FString debugs = GetVelocity().ToString();
-	FString debug = FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed);
+	FString debug = FString::SanitizeFloat(CameraInput.Y);
 	GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
 
 
 	{ //Look up/down
 		FRotator NewRotation = GetActorRotation();
-		NewRotation.Yaw += CameraInput.X;
+		NewRotation.Yaw = CameraInput.X;
 		SetActorRotation(NewRotation); 
 	}
 
 	{ //Look left/right
 		FRotator NewRotation = GetActorRotation();
-		NewRotation.Pitch = CameraInput.Y;
+		// Limit the rotation of the camera (not do a barrel roll)
+		NewRotation.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
 		SetActorRotation(NewRotation);
 	}
 
@@ -69,6 +72,9 @@ void AtestCharacter::MoveRunEnd() {
 
 void AtestCharacter::LookUp(float value) {
 	CameraInput.Y += value * cameraSpeed;
+	// Limit the rotation of the camera (not do a barrel roll)
+	CameraInput.Y = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
+
 
 }
 
