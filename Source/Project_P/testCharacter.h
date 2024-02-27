@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Camera/CameraComponent.h" 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "testCharacter.generated.h"
 
 UCLASS()
@@ -14,21 +16,41 @@ class PROJECT_P_API AtestCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AtestCharacter();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
-	float speed = 1;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Simplifier Speed character
+	/** Multiply the walk speed (base : 600) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+		float walkSpeed = 1;
+	/** Multiply the walk speed when press shift (base : 600xwalkSpeed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+		float runSpeed = 2;
+	/** Speed of the mouse */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+		float cameraSpeed = 5;
+
+	// Camera
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* Camera;
+
+	FVector2D CameraInput;
 
 	// Movement Functions
 	void MoveForward(float value);
 	void MoveSide(float value);
+	void MoveRunBegin();
+	void MoveRunEnd();
 
 	// Look Functions
 	void LookUp(float value);
 	void LookSide(float value);
+
+	// Hide function
+	void BeginHide();
+	void EndHide();
 
 public:	
 	// Called every frame
