@@ -33,25 +33,32 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float cameraSpeed = 5;
 
+	UWorld* gameWorld;
+
 	// Camera
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
 
 	FVector2D CameraInput;
 
-	// Movement Functions
+	// Movement functions
 	void MoveForward(float value);
 	void MoveSide(float value);
 	void MoveRunBegin();
 	void MoveRunEnd();
 
-	// Look Functions
+	// Look functions
 	void LookUp(float value);
 	void LookSide(float value);
 
 	// Hide function
-	void BeginHide();
-	void EndHide();
+	void HideBegin();
+	void HideEnd();
+
+	// Grab function
+	void GrabBegin();
+	void GrabEnd();
+
 
 public:	
 	// Called every frame

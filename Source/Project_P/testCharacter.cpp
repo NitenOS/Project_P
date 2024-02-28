@@ -9,6 +9,7 @@ AtestCharacter::AtestCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Camera setup
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
 	Camera->SetupAttachment(RootComponent);
@@ -19,10 +20,10 @@ AtestCharacter::AtestCharacter()
 void AtestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	gameWorld = GetWorld();
 
 	// Set the base speed for the character (600 is base speed)
 	GetCharacterMovement()->MaxWalkSpeed = 600 * walkSpeed;
-	
 }
 
 // Called every frame
@@ -30,19 +31,22 @@ void AtestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//It's just a thing for me to understand how to debug
-	FString debugs = GetVelocity().ToString();
-	FString debug = FString::SanitizeFloat(CameraInput.Y);
-	GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
+	//Debug message
+	{
+		FString debugs = GetVelocity().ToString();
+		FString debug = FString::SanitizeFloat(CameraInput.Y);
+		GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
+	}
 
-
-	{ //Look up/down
+	//Look up/down
+	{ 
 		FRotator NewRotation = GetActorRotation();
 		NewRotation.Yaw = CameraInput.X;
 		SetActorRotation(NewRotation); 
 	}
-
-	{ //Look left/right
+	
+	//Look left/right
+	{ 
 		FRotator NewRotation = GetActorRotation();
 		// Limit the rotation of the camera (not do a barrel roll)
 		NewRotation.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
@@ -74,8 +78,6 @@ void AtestCharacter::LookUp(float value) {
 	CameraInput.Y += value * cameraSpeed;
 	// Limit the rotation of the camera (not do a barrel roll)
 	CameraInput.Y = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
-
-
 }
 
 void AtestCharacter::LookSide(float value) {
@@ -83,12 +85,33 @@ void AtestCharacter::LookSide(float value) {
 
 }
 
-void AtestCharacter::BeginHide() {
+void AtestCharacter::HideBegin() {
 	//Code for begin hide action
 }
 
-void AtestCharacter::EndHide() {
+void AtestCharacter::HideEnd() {
 	//Code for exit hide action
+}
+
+void AtestCharacter::GrabBegin() {
+	FHitResult hitResult;
+	FCollisionQueryParams collisionParams;
+	FCollisionResponseParams collisionResponse;
+	collisionParams.AddIgnoredActor(this);
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Test")));
+	/*if (ActorLineTraceSingle(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+	}*/
+	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+	}
+
+}
+
+void AtestCharacter::GrabEnd() {
+
 }
 
 // Called to bind functionality to input
@@ -108,7 +131,11 @@ void AtestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookYawAxis", this, &AtestCharacter::LookSide);
 
 	// Hide
-	PlayerInputComponent->BindAction("Hide", IE_Pressed, this, &AtestCharacter::BeginHide);
-	PlayerInputComponent->BindAction("Hide", IE_Released, this, &AtestCharacter::EndHide);
+	PlayerInputComponent->BindAction("Hide", IE_Pressed, this, &AtestCharacter::HideBegin);
+	PlayerInputComponent->BindAction("Hide", IE_Released, this, &AtestCharacter::HideEnd);
+
+	// Grab
+	PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AtestCharacter::GrabBegin);
+	PlayerInputComponent->BindAction("Grab", IE_Released, this, &AtestCharacter::GrabEnd);
 }
 
