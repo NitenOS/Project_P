@@ -32,6 +32,8 @@ protected:
 	/** Speed of the mouse */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float cameraSpeed = 5;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+		USceneComponent* grabObjectPoint;
 
 	UWorld* gameWorld;
 

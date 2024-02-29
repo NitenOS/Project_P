@@ -94,24 +94,25 @@ void AtestCharacter::HideEnd() {
 }
 
 void AtestCharacter::GrabBegin() {
+
+	// Parameter of the Line trace
 	FHitResult hitResult;
 	FCollisionQueryParams collisionParams;
 	FCollisionResponseParams collisionResponse;
+
 	collisionParams.AddIgnoredActor(this);
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Test")));
-	/*if (ActorLineTraceSingle(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
-	}*/
+
+	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 	}
 
+
 }
 
 void AtestCharacter::GrabEnd() {
-
+	// Drop the item
 }
 
 // Called to bind functionality to input
