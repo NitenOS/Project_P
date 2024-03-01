@@ -13,7 +13,7 @@ AtestCharacter::AtestCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
 	Camera->SetupAttachment(RootComponent);
-	APlayerController* ShooterPlayerController = Cast<APlayerController>(Controller);
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 }
 
 // Called when the game starts or when spawned

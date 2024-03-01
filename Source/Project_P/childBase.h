@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AIController.h"
-#include "NavigationSystem.h" 
+#include "NavigationSystem.h"
+#include "GameFramework/CharacterMovementComponent.h" 
+#include "TimerManager.h" 
 #include "childBase.generated.h"
 
 UCLASS()
@@ -25,6 +27,8 @@ protected:
 	FNavLocation goalLocation;
 	AAIController* aiController;
 	UNavigationSystemV1* navSystem;
+	FTimerHandle TimerHandle;
+
 
 	void OnMoveCompleted(EPathFollowingRequestResult::Type Result);
 	virtual FPathFollowingRequestResult MoveIA(FNavLocation goalLocation);

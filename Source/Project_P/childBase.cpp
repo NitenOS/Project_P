@@ -16,18 +16,23 @@ void AchildBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+
+
 	originPosition = GetActorLocation();
 	goalLocation = FNavLocation(originPosition);
+	OnMoveCompleted(MoveIA(goalLocation));
 
 	navSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-	navSystem->GetRandomReachablePointInRadius(originPosition, 100.0f, goalLocation);
+	navSystem->GetRandomReachablePointInRadius(originPosition, 100.0f, goalLocation);	
+	
 }
 
 // Called every frame
 void AchildBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	OnMoveCompleted(MoveIA(goalLocation));
+	//OnMoveCompleted(MoveIA(goalLocation));
+	//GetCharacterMovement()->Velocity = GetCharacterMovement()->Velocity + FVector(10000);
 }
 
 // Called to bind functionality to input
@@ -57,7 +62,8 @@ void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 		break;
 	case EPathFollowingRequestResult::AlreadyAtGoal:
 		GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Purple, FString(TEXT("Ca a trouvé ou marcher !")));
-		
+		//GetWorldTimerManager().SetTimer(TimerHandle, On);
+		//GetWorldTimerManager().SetTimer(TimerHandle, this, OnMoveCompleted(MoveIA(goalLocation)), 1.0f, false, 2.0f);
 		navSystem->GetRandomReachablePointInRadius(originPosition, 100.0f, goalLocation);
 		OnMoveCompleted(MoveIA(goalLocation));
 		break;
