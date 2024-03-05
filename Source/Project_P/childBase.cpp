@@ -16,23 +16,41 @@ void AchildBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+	// Setup and move child first
+	{
+		originPosition = GetActorLocation();
+		aiController = this->GetController<AAIController>();
+
+		goalLocation = FNavLocation(originPosition);
+		navSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+
+		navSystem->GetRandomReachablePointInRadius(originPosition, 1.0f, goalLocation);
+		moveResult = MoveIA(goalLocation);
+	}
 
 
-	originPosition = GetActorLocation();
-	goalLocation = FNavLocation(originPosition);
-	OnMoveCompleted(MoveIA(goalLocation));
-
-	navSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-	navSystem->GetRandomReachablePointInRadius(originPosition, 100.0f, goalLocation);	
-	
 }
 
 // Called every frame
 void AchildBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//OnMoveCompleted(MoveIA(goalLocation));
-	//GetCharacterMovement()->Velocity = GetCharacterMovement()->Velocity + FVector(10000);
+
+	count += 1;
+	
+	if (count == 100) {
+		moveChild();
+		count = 0;
+	}
+}
+
+void AchildBase::moveChild() {
+
+	
+	moveResult = MoveIA(goalLocation);
+	OnMoveCompleted(moveResult);
 }
 
 // Called to bind functionality to input
@@ -40,35 +58,30 @@ void AchildBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("MoveChild", IE_Pressed, this, &AchildBase::moveChild);
 }
 
 FPathFollowingRequestResult AchildBase::MoveIA(FNavLocation _goalLocation) {
-	FPathFollowingRequestResult moveResult;
 	FAIMoveRequest moveRequest = FAIMoveRequest();
 
-	aiController = this->GetController<AAIController>();
-
 	moveRequest.SetGoalLocation(_goalLocation.Location);
-	aiController->MoveTo(moveRequest);
 	return aiController->MoveTo(moveRequest);
 }
 
 void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 {
-	switch (Result)
-	{
+	switch (Result) {
 	case EPathFollowingRequestResult::Failed:
-		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Ca doit pas marcher !")));
+		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Request failed")));
 		break;
 	case EPathFollowingRequestResult::AlreadyAtGoal:
-		GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Purple, FString(TEXT("Ca a trouvé ou marcher !")));
-		//GetWorldTimerManager().SetTimer(TimerHandle, On);
-		//GetWorldTimerManager().SetTimer(TimerHandle, this, OnMoveCompleted(MoveIA(goalLocation)), 1.0f, false, 2.0f);
-		navSystem->GetRandomReachablePointInRadius(originPosition, 100.0f, goalLocation);
-		OnMoveCompleted(MoveIA(goalLocation));
+		GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Purple, FString(TEXT("Already at Goal !")));
+
+		navSystem->GetRandomReachablePointInRadius(originPosition, 500.0f, goalLocation);
+		moveResult = MoveIA(goalLocation);
 		break;
 	case EPathFollowingRequestResult::RequestSuccessful:
-		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Ca a marcher !")));
+		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Request Succes !")));
 		break;
 	}
 }

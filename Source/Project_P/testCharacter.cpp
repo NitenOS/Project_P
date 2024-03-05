@@ -23,7 +23,7 @@ void AtestCharacter::BeginPlay()
 	gameWorld = GetWorld();
 
 	// Set the base speed for the character (600 is base speed)
-	GetCharacterMovement()->MaxWalkSpeed = 600 * walkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
 // Called every frame
@@ -33,9 +33,9 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	//Debug message
 	{
-		FString debugs = GetVelocity().ToString();
-		FString debug = FString::SanitizeFloat(CameraInput.Y);
-		GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
+		//FString debugs = GetVelocity().ToString();
+		//FString debug = FString::SanitizeFloat(CameraInput.Y);
+		//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
 	}
 
 	//Look up/down

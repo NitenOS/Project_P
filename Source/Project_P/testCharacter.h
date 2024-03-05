@@ -25,8 +25,8 @@ protected:
 	// Simplifier Speed character
 	/** Multiply the walk speed (base : 600) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
-		float walkSpeed = 1;
-	/** Multiply the walk speed when press shift (base : 600xwalkSpeed) */
+		float walkSpeed = 600;
+	/** Multiply the walk speed when press shift (base : walkSpeed) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float runSpeed = 2;
 	/** Speed of the mouse */

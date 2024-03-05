@@ -23,15 +23,29 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Simplifier Speed character
+	/** Multiply the walk speed (base : 600) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+		float walkSpeed = 600;
+
 	FVector originPosition;
 	FNavLocation goalLocation;
 	AAIController* aiController;
 	UNavigationSystemV1* navSystem;
 	FTimerHandle TimerHandle;
+	FPathFollowingRequestResult moveResult;
 
+
+
+
+	int count = 0.0f;
 
 	void OnMoveCompleted(EPathFollowingRequestResult::Type Result);
 	virtual FPathFollowingRequestResult MoveIA(FNavLocation goalLocation);
+	
+	
+	void moveChild();
+
 
 public:	
 	// Called every frame
