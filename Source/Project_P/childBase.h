@@ -25,8 +25,10 @@ protected:
 
 	// Simplifier Speed character
 	/** Multiply the walk speed (base : 600) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 		float walkSpeed = 600;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+		//TArray<FNavLocation> navLocationArray;
 
 	FVector originPosition;
 	FNavLocation goalLocation;
