@@ -27,8 +27,8 @@ protected:
 	/** Multiply the walk speed (base : 600) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 		float walkSpeed = 600;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
-		//TArray<FNavLocation> navLocationArray;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+		TArray<FVector> navPoints;
 
 	FVector originPosition;
 	FNavLocation goalLocation;
@@ -36,9 +36,6 @@ protected:
 	UNavigationSystemV1* navSystem;
 	FTimerHandle TimerHandle;
 	FPathFollowingRequestResult moveResult;
-
-
-
 
 	int count = 0.0f;
 
