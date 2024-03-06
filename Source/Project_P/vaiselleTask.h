@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+//#include "testCharacter.h"
 #include "vaiselleTask.generated.h"
 
 UCLASS()
@@ -18,6 +19,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	float taskProgession = 0.0f;
 
 public:	
 	// Called every frame

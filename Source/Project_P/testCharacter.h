@@ -9,6 +9,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h"
 #include "adoChild.h"
+#include "vaiselleTask.h"
 #include "testCharacter.generated.h"
 
 UCLASS()
@@ -51,6 +52,7 @@ protected:
 	// Camera
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
+	//UCapsuleComponent* Capsule;
 
 	FVector2D CameraInput;
 
