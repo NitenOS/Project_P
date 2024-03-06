@@ -24,6 +24,10 @@ void AtestCharacter::BeginPlay()
 
 	// Set the base speed for the character (600 is base speed)
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+	adoclass = UGameplayStatics::GetActorOfClass(gameWorld, AadoChild::StaticClass());
+	ado = Cast<AadoChild>(adoclass);
+
 }
 
 // Called every frame
@@ -53,6 +57,33 @@ void AtestCharacter::Tick(float DeltaTime)
 		SetActorRotation(NewRotation);
 	}
 
+	// Stress jauge
+	{
+		if (ado != nullptr) {
+			distance = GetDistanceTo(ado);
+			GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, FString::SanitizeFloat(distance));
+		
+			if (distance <= maxDistanceAdo && stressBPM <= 100) {
+				stressBPM += 0.5;
+			}
+			else if (distance >= maxDistanceAdo && stressBPM >=0) {
+				stressBPM -= 0.5;
+			}
+		
+		}
+	}
+
+	// Camera FX
+	{
+		Camera->PostProcessSettings.VignetteIntensity = 3 * stressBPM * 0.01;
+		Camera->PostProcessSettings.FilmGrainIntensity = 3 * stressBPM * 0.01;
+	}
+
+	// Do basic task
+	{
+		
+	}
+
 }
 
 
@@ -66,12 +97,12 @@ void AtestCharacter::MoveSide(float value) {
 
 void AtestCharacter::MoveRunBegin() {
 	//Code for run action
-	GetCharacterMovement()->MaxWalkSpeed = 600 * walkSpeed * runSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
 }
 
 void AtestCharacter::MoveRunEnd() {
 	//Code for run action
-	GetCharacterMovement()->MaxWalkSpeed = 600 * walkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
 void AtestCharacter::LookUp(float value) {
@@ -107,8 +138,6 @@ void AtestCharacter::GrabBegin() {
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 	}
-
-
 }
 
 void AtestCharacter::GrabEnd() {

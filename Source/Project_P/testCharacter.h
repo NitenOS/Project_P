@@ -7,6 +7,8 @@
 #include "Camera/CameraComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Kismet/GameplayStatics.h"
+#include "adoChild.h"
 #include "testCharacter.generated.h"
 
 UCLASS()
@@ -35,7 +37,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		USceneComponent* grabObjectPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CPPJauge)
+		float stressBPM = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
+		int maxDistanceAdo = 500;
+
 	UWorld* gameWorld;
+	AActor* adoclass;
+	AadoChild* ado;
+	float distance;
+
 
 	// Camera
 	UPROPERTY(EditAnywhere)
@@ -60,6 +71,8 @@ protected:
 	// Grab function
 	void GrabBegin();
 	void GrabEnd();
+
+
 
 
 public:	

@@ -19,10 +19,6 @@ public:
 	// Sets default values for this character's properties
 	AchildBase();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	// Simplifier Speed character
 	/** Multiply the walk speed (base : 600) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
@@ -30,6 +26,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 		TArray<FVector> navPoints;
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	int oldNavPoint;
 	FVector originPosition;
 	FNavLocation goalLocation;
 	AAIController* aiController;
@@ -37,7 +38,9 @@ protected:
 	FTimerHandle TimerHandle;
 	FPathFollowingRequestResult moveResult;
 
-	int count = 0.0f;
+	int navPointCount = 1;
+	float count = 0.0f;
+	float waitTime = 1.0f;
 
 	void OnMoveCompleted(EPathFollowingRequestResult::Type Result);
 	virtual FPathFollowingRequestResult MoveIA(FNavLocation goalLocation);
@@ -53,4 +56,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FNavLocation getGoalLocation();
+	void setGoalLocation(FNavLocation _goalLocation);
 };
