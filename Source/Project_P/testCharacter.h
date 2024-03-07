@@ -45,12 +45,14 @@ protected:
 		float stressBPM = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		int maxDistanceAdo = 500;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
+		float YeetForce = 1000.0f;
 
 	UWorld* gameWorld;
 	AActor* adoclass;
 	AadoChild* ado;
 	float distance;
-
+	bool isGrabed = false;
 
 	// Camera
 	UPROPERTY(EditAnywhere)

@@ -97,6 +97,13 @@ void AtestCharacter::Tick(float DeltaTime)
 		}
 	}*/
 
+	// Grab system
+	{
+		if (isGrabed) {
+			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 200 + Camera->GetComponentLocation());
+		}
+	}
+
 }
 
 
@@ -131,6 +138,16 @@ void AtestCharacter::LookSide(float value) {
 
 void AtestCharacter::HideBegin() {
 	//Code for begin hide action
+	if (isGrabed) {
+		//PhyHandle->ReleaseComponent();
+		//isGrabed = false;
+		UPrimitiveComponent* grabTemp = PhyHandle->GrabbedComponent;
+
+		PhyHandle->ReleaseComponent();
+		grabTemp->AddForce(FVector(Camera->GetForwardVector() * 1000.0 * 1000.0f * grabTemp->GetMass()));
+
+		isGrabed = false;
+	}
 }
 
 void AtestCharacter::HideEnd() {
@@ -148,15 +165,40 @@ void AtestCharacter::GrabBegin() {
 
 	collisionParams.AddIgnoredActor(this);
 
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
+
+
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+	
+		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
+
+		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
+
+		if (PhyHandle->GrabbedComponent) {
+			//PhyHandle->SetTargetLocation(hitResult.Location);
+			isGrabed = true;
+		}
 	}
+
+	
 }
 
 void AtestCharacter::GrabEnd() {
 	// Drop the item
+	if (isGrabed) {
+		//PhyHandle->ReleaseComponent();
+		//isGrabed = false;
+		UPrimitiveComponent* grabTemp = PhyHandle->GrabbedComponent;
+		
+		PhyHandle->ReleaseComponent();
+		grabTemp->AddForce(FVector(Camera->GetForwardVector() * 1000.0f* grabTemp->GetMass()));
+		
+		isGrabed = false;
+	}
+
 }
 
 // Called to bind functionality to input
