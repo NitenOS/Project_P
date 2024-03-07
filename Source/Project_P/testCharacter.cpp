@@ -15,7 +15,10 @@ AtestCharacter::AtestCharacter()
 	Camera->SetupAttachment(RootComponent);
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 
-	//Capsule = Cast<UCapsuleComponent>(Capsule);
+	//Physics Handle setup
+	PhyHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("phyHandle"));
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -136,7 +139,7 @@ void AtestCharacter::HideEnd() {
 
 void AtestCharacter::GrabBegin() {
 
-	DECLARE_DELEGATE(GOGRAB);
+	//grabed.ExecuteIfBound();
 
 	// Parameter of the Line trace
 	FHitResult hitResult;
@@ -149,16 +152,6 @@ void AtestCharacter::GrabBegin() {
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
-	}
-
-	AvaiselleTask* vTask = Cast<AvaiselleTask>(UGameplayStatics::GetActorOfClass(gameWorld, AvaiselleTask::StaticClass()));
-	if (vTask != nullptr) {
-		//Cast Succes
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString(TEXT("Succes")));
-	}
-	else {
-		//Cast Fail
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString(TEXT("Fail")));
 	}
 }
 

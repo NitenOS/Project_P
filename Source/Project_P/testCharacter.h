@@ -5,13 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h" 
+#include "PhysicsEngine/PhysicsHandleComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h"
+#include "Delegates/Delegate.h"
 #include "adoChild.h"
 #include "vaiselleTask.h"
 #include "testCharacter.generated.h"
 
+//DECLARE_DELEGATE(GRABGO);
 UCLASS()
 class PROJECT_P_API AtestCharacter : public ACharacter
 {
@@ -52,6 +55,9 @@ protected:
 	// Camera
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
+	UPROPERTY(EditAnywhere)
+	UPhysicsHandleComponent* PhyHandle;
+
 	//UCapsuleComponent* Capsule;
 
 	FVector2D CameraInput;
@@ -83,5 +89,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	//UPROPERTY()
+	//GRABGO grabed;
 };
