@@ -33,6 +33,10 @@ void AtestCharacter::BeginPlay()
 	adoclass = UGameplayStatics::GetActorOfClass(gameWorld, AadoChild::StaticClass());
 	ado = Cast<AadoChild>(adoclass);
 
+	// Check value
+	if (stressBPM > 100.0f) { stressBPM = 100.0f; }
+	if (YeetForce > 800.0f) { YeetForce = 800.0f; }
+
 }
 
 // Called every frame
@@ -83,19 +87,6 @@ void AtestCharacter::Tick(float DeltaTime)
 		Camera->PostProcessSettings.VignetteIntensity = 3 * stressBPM * 0.01;
 		Camera->PostProcessSettings.FilmGrainIntensity = 10 * stressBPM * 0.01;
 	}
-
-	// Veselle task
-	/* {
-		AvaiselleTask* vTask = Cast<AvaiselleTask>(UGameplayStatics::GetActorOfClass(gameWorld, AvaiselleTask::StaticClass()));
-		if (vTask != nullptr) {
-			//Cast Succes
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString(TEXT("Succes")));
-		}
-		else {
-			//Cast Fail
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString(TEXT("Fail")));
-		}
-	}*/
 
 	// Grab system
 	{
@@ -159,29 +150,31 @@ void AtestCharacter::GrabBegin() {
 	//grabed.ExecuteIfBound();
 
 	// Parameter of the Line trace
-	FHitResult hitResult;
-	FCollisionQueryParams collisionParams;
-	FCollisionResponseParams collisionResponse;
+	//FHitResult hitResult;
+	//FCollisionQueryParams collisionParams;
+	//FCollisionResponseParams collisionResponse;
 
-	collisionParams.AddIgnoredActor(this);
+	//collisionParams.AddIgnoredActor(this);
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
 
 
-	// Cast a single Line trace face of the cam 
-	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
-	
-		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
+	//// Cast a single Line trace face of the cam 
+	//if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+	//
+	//	UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
 
-		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
+	//	PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
 
-		if (PhyHandle->GrabbedComponent) {
-			//PhyHandle->SetTargetLocation(hitResult.Location);
-			isGrabed = true;
-		}
-	}
+	//	if (PhyHandle->GrabbedComponent) {
+	//		//PhyHandle->SetTargetLocation(hitResult.Location);
+	//		isGrabed = true;
+	//	}
+	//}
+
+	Grabing();
 
 	
 }
@@ -199,6 +192,32 @@ void AtestCharacter::GrabEnd() {
 		isGrabed = false;
 	}
 
+}
+
+void AtestCharacter::Grabing() {
+	FHitResult hitResult;
+	FCollisionQueryParams collisionParams;
+	FCollisionResponseParams collisionResponse;
+
+	collisionParams.AddIgnoredActor(this);
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
+
+
+	// Cast a single Line trace face of the cam 
+	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+
+		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
+
+		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
+
+		if (*hitResult.GetComponent()->GetName() == FString("Cube") && PhyHandle->GrabbedComponent) {
+			//PhyHandle->SetTargetLocation(hitResult.Location);
+			isGrabed = true;
+		}
+	}
 }
 
 // Called to bind functionality to input

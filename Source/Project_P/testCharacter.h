@@ -14,7 +14,6 @@
 #include "vaiselleTask.h"
 #include "testCharacter.generated.h"
 
-//DECLARE_DELEGATE(GRABGO);
 UCLASS()
 class PROJECT_P_API AtestCharacter : public ACharacter
 {
@@ -29,24 +28,28 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Simplifier Speed character
-	/** Multiply the walk speed (base : 600) */
+	/** Multiply the walk speed (base : 600.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float walkSpeed = 600;
 	/** Multiply the walk speed when press shift (base : walkSpeed) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float runSpeed = 2;
-	/** Speed of the mouse */
+	/** Speed of the mouse (base : 5.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float cameraSpeed = 5;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		USceneComponent* grabObjectPoint;
 
+	/** base BPM (jauge) on start (max 100) (base : 1.0f) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CPPJauge)
 		float stressBPM = 1.0f;
+	/** max distance from ado to start up BPM (jauge) (base : 500 (int)) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		int maxDistanceAdo = 500;
+	/** base YeetForce (addForce) on start (max 800) (base : 500.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
-		float YeetForce = 1000.0f;
+		float YeetForce = 500.0f;
 
 	UWorld* gameWorld;
 	AActor* adoclass;
@@ -92,6 +95,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	//UPROPERTY()
-	//GRABGO grabed;
+	//UPROPERTY(BlueprintAssignable)
+	UFUNCTION(BlueprintCallable)
+		void Grabing();
 };

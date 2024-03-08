@@ -23,8 +23,9 @@ void AadoChild::Tick(float DeltaTime) {
 		}
 
 	}
-}
 
-void AadoChild::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	if (count >= waitTime) {
+		moveChild();
+		count = 0.0f;
+	}
 }

@@ -4,24 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "childBase.h"
-#include "adoChild.generated.h"
+#include "testCharacter.h"
+#include "followChild.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API AadoChild : public AchildBase
+class PROJECT_P_API AfollowChild : public AchildBase
 {
 	GENERATED_BODY()
 	
 public:
-	AadoChild();
+	AfollowChild();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	int navPointCount = 1;
+	AtestCharacter* mc;
+
+	bool FollowPlayer();
+
 
 public:
 	// Called every frame

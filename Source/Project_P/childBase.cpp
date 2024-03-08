@@ -45,14 +45,12 @@ void AchildBase::Tick(float DeltaTime)
 		if (navPoints[navPointCount] != FVector(0, 0, 0)) {
 			goalLocation = FNavLocation(navPoints[navPointCount]);
 		}
-	
 	}
 
-
-	if (count >= waitTime) {
-		moveChild();
-		count = 0;
-	}
+	//if (count >= waitTime) {
+	//	moveChild();
+	//	count = 0;
+	//}
 }
 
 void AchildBase::moveChild() {
@@ -62,17 +60,9 @@ void AchildBase::moveChild() {
 	OnMoveCompleted(moveResult);
 }
 
-// Called to bind functionality to input
-void AchildBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("MoveChild", IE_Pressed, this, &AchildBase::moveChild);
-}
-
-
 FPathFollowingRequestResult AchildBase::MoveIA(FNavLocation _goalLocation) {
 	FAIMoveRequest moveRequest = FAIMoveRequest();
+	moveRequest.SetAcceptanceRadius(acceptedRadius);
 
 	moveRequest.SetGoalLocation(_goalLocation.Location);
 	return aiController->MoveTo(moveRequest);
@@ -89,7 +79,7 @@ void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 
 		//navSystem->GetRandomReachablePointInRadius(originPosition, 500.0f, goalLocation);
 		if (navPointCount == navPoints.Num()-1) navPointCount = -1;
-		//navPointCount++;
+		navPointCount++;
 		oldNavPoint = navPointCount;
 
 		do { navPointCount = FMath::RandRange(0, navPoints.Num() - 1);

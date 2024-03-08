@@ -20,11 +20,13 @@ public:
 	AchildBase();
 
 	// Simplifier Speed character
-	/** Multiply the walk speed (base : 600) */
+	/** Multiply the walk speed (base : 600.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
-		float walkSpeed = 600;
+		float walkSpeed = 600.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 		TArray<FVector> navPoints;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+	float acceptedRadius = 100.0f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -52,9 +54,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FNavLocation getGoalLocation();
 	void setGoalLocation(FNavLocation _goalLocation);
