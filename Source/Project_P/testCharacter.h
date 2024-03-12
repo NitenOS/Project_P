@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h" 
+#include "Components/AudioComponent.h" 
 #include "PhysicsEngine/PhysicsHandleComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Math/UnrealMathUtility.h"
@@ -38,8 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
 		float cameraSpeed = 5;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
-		USceneComponent* grabObjectPoint;
+
 
 	/** base BPM (jauge) on start (max 100) (base : 1.0f) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CPPJauge)
@@ -50,6 +50,37 @@ protected:
 	/** base YeetForce (addForce) on start (max 800) (base : 500.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		float YeetForce = 500.0f;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+		UAudioComponent* WalkSFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+		UAudioComponent* HeartSFX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+		TArray<USoundBase*> footsteps;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+		TArray<USoundBase*> heartBeat;
+
+
+
+
+	// footstep var
+	int numFootstep = 0;
+	float footstepcount = 0.0f;
+	float maxFootstepCount = 0.8f;
+
+	// heartbeat var
+	int numHeartbeat = 0;
+	float heartbeatCount = 0.0f;
+	float actualHeartBeatCount = 1.5f;
+	float minHeartbeatCount = 0.8f;
+	float maxHeartbeatCount = 1.5f;
+
+	// valk var
+	bool isWalkingF = false;
+	bool isWalkingD = false;
+	bool isRuning = false;
 
 	UWorld* gameWorld;
 	AActor* adoclass;

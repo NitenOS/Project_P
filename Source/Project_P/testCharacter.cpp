@@ -13,11 +13,21 @@ AtestCharacter::AtestCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
 	Camera->SetupAttachment(RootComponent);
+
+	//Player Controller setup
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 
 	//Physics Handle setup
 	PhyHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("phyHandle"));
 	
+	//walkSFX setup
+	WalkSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("walkSFX"));
+	WalkSFX->SetRelativeLocation(FVector(0.0f, 0.0f, -70.0f));
+	WalkSFX->SetupAttachment(RootComponent);
+
+	HeartSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("heartSFX"));
+	HeartSFX->SetRelativeLocation(FVector(0.0f, 0.0f, -30.0f));
+	HeartSFX->SetupAttachment(RootComponent);
 
 }
 
@@ -95,9 +105,47 @@ void AtestCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	// Check on screen ado
+	// Sound FX
 	{
-		//Camera->Location
+		// Footstep 
+		{
+			WalkSFX->Sound = footsteps[numFootstep];
+
+			if (isWalkingF || isWalkingD) {
+				footstepcount += DeltaTime;
+				if (isRuning) { footstepcount += DeltaTime; }
+
+				if (footstepcount >= maxFootstepCount) {
+
+					//numFootstep = FMath::RandRange(0, footsteps.Num() - 1);
+					numFootstep += 1;
+					if (numFootstep >= footsteps.Num()) { numFootstep = 0; }
+					//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(numFootstep));
+
+					WalkSFX->Play();
+					footstepcount = 0.0f;
+				}
+			}
+		}
+
+		// Breathing || stressBPM 100 max
+		{
+			HeartSFX->Sound = heartBeat[numHeartbeat];
+			heartbeatCount += DeltaTime;
+
+			actualHeartBeatCount = maxHeartbeatCount - 0.7f * (stressBPM / 100.0f);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(actualHeartBeatCount));
+
+
+			if (heartbeatCount >= actualHeartBeatCount) {
+				numHeartbeat += 1;
+
+				if (numHeartbeat >= heartBeat.Num()) { numHeartbeat = 0; }
+
+				HeartSFX->Play();
+				heartbeatCount = 0.0f;
+			}
+		}
 	}
 
 }
@@ -105,20 +153,26 @@ void AtestCharacter::Tick(float DeltaTime)
 
 void AtestCharacter::MoveForward(float value) {
 	AddMovementInput(GetActorForwardVector(), value);
+	if (value == -1.0f || value == 1.0f) { isWalkingF = true;  }
+	else { isWalkingF = false; }
 }
 
 void AtestCharacter::MoveSide(float value) {
 	AddMovementInput(GetActorRightVector(), value);
+	if (value == -1.0f || value == 1.0f) { isWalkingD = true; }
+	else { isWalkingD = false; }
 }
 
 void AtestCharacter::MoveRunBegin() {
 	//Code for run action
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
+	isRuning = true;
 }
 
 void AtestCharacter::MoveRunEnd() {
 	//Code for run action
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	isRuning = false;
 }
 
 void AtestCharacter::LookUp(float value) {

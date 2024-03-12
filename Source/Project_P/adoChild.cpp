@@ -18,7 +18,7 @@ void AadoChild::Tick(float DeltaTime) {
 
 	if (count < adoWaitTime) { count += DeltaTime; }
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::SanitizeFloat(count));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::SanitizeFloat(count));
 
 	if (count >= waitTime) {
 		if (!navPoints.IsEmpty()) {
