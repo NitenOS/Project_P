@@ -10,22 +10,29 @@ AadoChild::AadoChild() {
 
 void AadoChild::BeginPlay() {
 	Super::BeginPlay();
-	waitTime = 5;
+	waitTime = adoWaitTime;
 }
 
 void AadoChild::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (!navPoints.IsEmpty()) {
-		//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(FString::SanitizeFloat(navPoints.Num())));
-		if (navPoints[navPointCount] != FVector(0, 0, 0)) {
-			setGoalLocation(FNavLocation(navPoints[navPointCount]));
-		}
+	if (count < adoWaitTime) { count += DeltaTime; }
 
-	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::SanitizeFloat(count));
 
 	if (count >= waitTime) {
-		moveChild();
-		count = 0.0f;
+		if (!navPoints.IsEmpty()) {
+
+			oldNavPoint = navPointCount;
+
+			do {
+				navPointCount = FMath::RandRange(0, navPoints.Num() - 1);
+			} while (navPointCount == oldNavPoint);
+
+			this->SetActorLocation(navPoints[navPointCount]);
+		}
+
+		count = 0;
 	}
+
 }

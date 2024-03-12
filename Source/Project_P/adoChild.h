@@ -21,6 +21,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CPP Seting")
+	float adoWaitTime = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CPP Seting")
+	float test;
+
 	int navPointCount = 1;
 
 public:

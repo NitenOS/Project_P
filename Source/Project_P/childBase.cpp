@@ -18,7 +18,7 @@ void AchildBase::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
-	// Setup and move child first
+	// Setup and move child once
 	{
 		originPosition = GetActorLocation();
 		aiController = this->GetController<AAIController>();
@@ -29,8 +29,6 @@ void AchildBase::BeginPlay()
 		navSystem->GetRandomReachablePointInRadius(originPosition, 1.0f, goalLocation);
 		moveResult = MoveIA(goalLocation);
 	}
-
-
 }
 
 // Called every frame
@@ -38,24 +36,12 @@ void AchildBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	count += DeltaTime;
-	
-	if (!navPoints.IsEmpty()) {
-		//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(FString::SanitizeFloat(navPoints.Num())));
-		if (navPoints[navPointCount] != FVector(0, 0, 0)) {
-			goalLocation = FNavLocation(navPoints[navPointCount]);
-		}
-	}
-
-	//if (count >= waitTime) {
-	//	moveChild();
-	//	count = 0;
-	//}
+	//count += DeltaTime;
 }
 
 void AchildBase::moveChild() {
 
-	
+
 	moveResult = MoveIA(goalLocation);
 	OnMoveCompleted(moveResult);
 }
@@ -65,6 +51,8 @@ FPathFollowingRequestResult AchildBase::MoveIA(FNavLocation _goalLocation) {
 	moveRequest.SetAcceptanceRadius(acceptedRadius);
 
 	moveRequest.SetGoalLocation(_goalLocation.Location);
+
+
 	return aiController->MoveTo(moveRequest);
 }
 
@@ -72,29 +60,31 @@ void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 {
 	switch (Result) {
 	case EPathFollowingRequestResult::Failed:
-		//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Request failed")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request failed")));
 		break;
 	case EPathFollowingRequestResult::AlreadyAtGoal:
-		//GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Purple, FString(TEXT("Already at Goal !")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Already at Goal !")));
 
-		//navSystem->GetRandomReachablePointInRadius(originPosition, 500.0f, goalLocation);
-		if (navPointCount == navPoints.Num()-1) navPointCount = -1;
-		navPointCount++;
 		oldNavPoint = navPointCount;
 
-		do { navPointCount = FMath::RandRange(0, navPoints.Num() - 1);
+		if (navPointCount == navPoints.Num() - 1) { navPointCount = 0; }
+		else { navPointCount++; }
 
+		do { 
+			navPointCount = FMath::RandRange(0, navPoints.Num() - 1);
 		} while (navPointCount == oldNavPoint);
+		
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(navPointCount)));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(oldNavPoint)));
 
 		moveResult = MoveIA(goalLocation);
 		break;
 
 	case EPathFollowingRequestResult::RequestSuccessful:
-		//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Purple, FString(TEXT("Request Succes !")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request Succes !")));
 		break;
 	}
 }
-
 
 FNavLocation AchildBase::getGoalLocation() {
 	return goalLocation;

@@ -70,7 +70,7 @@ void AtestCharacter::Tick(float DeltaTime)
 	{
 		if (ado != nullptr) {
 			distance = GetDistanceTo(ado);
-			GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, FString::SanitizeFloat(distance));
+			//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, FString::SanitizeFloat(distance));
 		
 			if (distance <= maxDistanceAdo && stressBPM <= 100) {
 				stressBPM += 0.5;
@@ -93,6 +93,11 @@ void AtestCharacter::Tick(float DeltaTime)
 		if (isGrabed) {
 			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 200 + Camera->GetComponentLocation());
 		}
+	}
+
+	// Check on screen ado
+	{
+		//Camera->Location
 	}
 
 }

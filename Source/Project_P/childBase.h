@@ -26,7 +26,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 		TArray<FVector> navPoints;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
-	float acceptedRadius = 100.0f;
+		float acceptedRadius = 100.0f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,7 +42,7 @@ protected:
 
 	int navPointCount = 1;
 	float count = 0.0f;
-	float waitTime = 1.0f;
+	float waitTime = 5.0f;
 
 	void OnMoveCompleted(EPathFollowingRequestResult::Type Result);
 	virtual FPathFollowingRequestResult MoveIA(FNavLocation goalLocation);
