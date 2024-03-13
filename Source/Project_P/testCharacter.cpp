@@ -56,24 +56,26 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	//Debug message
 	{
-		//FString debugs = GetVelocity().ToString();
-		//FString debug = FString::SanitizeFloat(CameraInput.Y);
+		FString debugs = GetActorRotation().ToString();
+		FString debug = FString::SanitizeFloat(CameraInput.X);
 		//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
 	}
 
-	//Look up/down
-	{ 
-		FRotator NewRotation = GetActorRotation();
-		NewRotation.Yaw = CameraInput.X;
-		SetActorRotation(NewRotation); 
-	}
-	
 	//Look left/right
 	{ 
-		FRotator NewRotation = GetActorRotation();
+		FRotator NewRotationX = GetActorRotation();
+		NewRotationX.Yaw = CameraInput.X;
+		SetActorRotation(NewRotationX);
+		//Camera->SetRelativeRotation(NewRotationX);
+	}
+	
+	//Look up/down
+	{ 
+		FRotator NewRotationY = GetActorRotation();
 		// Limit the rotation of the camera (not do a barrel roll)
-		NewRotation.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
-		SetActorRotation(NewRotation);
+		NewRotationY.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
+		SetActorRotation(NewRotationY);
+		//Camera->SetRelativeRotation(NewRotationY);
 	}
 
 	// Stress jauge
@@ -147,7 +149,6 @@ void AtestCharacter::Tick(float DeltaTime)
 			}
 		}
 	}
-
 }
 
 
@@ -183,7 +184,7 @@ void AtestCharacter::LookUp(float value) {
 
 void AtestCharacter::LookSide(float value) {
 	CameraInput.X += value * cameraSpeed;
-
+	if (CameraInput.X < -360 || CameraInput.X > 360) { CameraInput.X = 0; }
 }
 
 void AtestCharacter::HideBegin() {
@@ -205,37 +206,7 @@ void AtestCharacter::HideEnd() {
 }
 
 void AtestCharacter::GrabBegin() {
-
-	//grabed.ExecuteIfBound();
-
-	// Parameter of the Line trace
-	//FHitResult hitResult;
-	//FCollisionQueryParams collisionParams;
-	//FCollisionResponseParams collisionResponse;
-
-	//collisionParams.AddIgnoredActor(this);
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
-
-
-	//// Cast a single Line trace face of the cam 
-	//if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse)) 
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
-	//
-	//	UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
-
-	//	PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
-
-	//	if (PhyHandle->GrabbedComponent) {
-	//		//PhyHandle->SetTargetLocation(hitResult.Location);
-	//		isGrabed = true;
-	//	}
-	//}
-
 	Grabing();
-
-	
 }
 
 void AtestCharacter::GrabEnd() {
