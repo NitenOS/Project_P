@@ -12,6 +12,7 @@ AtestCharacter::AtestCharacter()
 	//Camera setup
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+	Camera->SetRelativeRotation(FQuat(0.0f));
 	Camera->SetupAttachment(RootComponent);
 
 	//Player Controller setup
@@ -47,6 +48,9 @@ void AtestCharacter::BeginPlay()
 	if (stressBPM > 100.0f) { stressBPM = 100.0f; }
 	if (YeetForce > 800.0f) { YeetForce = 800.0f; }
 
+	//Camera->SetRelativeRotation(FQuat(0.0f));
+	this->SetActorRotation(Camera->GetRelativeRotation());
+	
 }
 
 // Called every frame
@@ -56,9 +60,10 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	//Debug message
 	{
-		FString debugs = GetActorRotation().ToString();
-		FString debug = FString::SanitizeFloat(CameraInput.X);
-		//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, debug);
+		FString rotPlayer = this->CameraInput.ToString();
+		FString rotCam = Camera->GetRelativeRotation().ToString();
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, rotPlayer);
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, rotCam);
 	}
 
 	//Look left/right
@@ -66,16 +71,14 @@ void AtestCharacter::Tick(float DeltaTime)
 		FRotator NewRotationX = GetActorRotation();
 		NewRotationX.Yaw = CameraInput.X;
 		SetActorRotation(NewRotationX);
-		//Camera->SetRelativeRotation(NewRotationX);
 	}
 	
 	//Look up/down
 	{ 
-		FRotator NewRotationY = GetActorRotation();
+		FRotator NewRotationY = Camera->GetRelativeRotation();
 		// Limit the rotation of the camera (not do a barrel roll)
 		NewRotationY.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
-		SetActorRotation(NewRotationY);
-		//Camera->SetRelativeRotation(NewRotationY);
+		Camera->SetRelativeRotation(NewRotationY);
 	}
 
 	// Stress jauge
@@ -136,7 +139,7 @@ void AtestCharacter::Tick(float DeltaTime)
 			heartbeatCount += DeltaTime;
 
 			actualHeartBeatCount = maxHeartbeatCount - 0.7f * (stressBPM / 100.0f);
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(actualHeartBeatCount));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(actualHeartBeatCount));
 
 
 			if (heartbeatCount >= actualHeartBeatCount) {
