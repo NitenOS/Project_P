@@ -43,7 +43,7 @@ protected:
 
 
 	/** base BPM (jauge) on start (max 100) (base : 1.0f) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CPPJauge)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		float stressBPM = 1.0f;
 	/** max distance from ado to start up BPM (jauge) (base : 500 (int)) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
@@ -82,6 +82,8 @@ protected:
 	bool isWalkingF = false;
 	bool isWalkingD = false;
 	bool isRuning = false;
+	float countRuning = 0.0f;
+	const float maxCountRuning = 0.5f;
 
 	UWorld* gameWorld;
 	AActor* adoclass;
@@ -92,6 +94,7 @@ protected:
 	bool isShoked = false;
 	float countShoked = 0.0f;
 	float maxCountShoked = 2.0f;
+
 
 	// Camera
 	UPROPERTY(EditAnywhere)
@@ -137,4 +140,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Shoked(FRotator childRotation);
+
+
+	UFUNCTION(BlueprintCallable)
+	/**Check "add" for add the stressBPM
+	* uncheck "add" for subtracte stressBPM
+	*/
+	void changeBPM(bool add, float number = 10);
 };

@@ -87,7 +87,7 @@ void AtestCharacter::Tick(float DeltaTime)
 	if (isShoked == true) {
 		countShoked += DeltaTime;
 		
-		if(stressBPM <= 100) stressBPM += 1;
+		if(stressBPM <= 100) stressBPM += 0.3f;
 		
 		if (countShoked >= maxCountShoked) {
 			isShoked = false;
@@ -104,10 +104,19 @@ void AtestCharacter::Tick(float DeltaTime)
 			if (distance <= maxDistanceAdo && stressBPM <= 100) {
 				stressBPM += 0.5;
 			}
-			else if (distance >= maxDistanceAdo && stressBPM >=0) {
+			/*if (distance >= maxDistanceAdo && stressBPM >= 0) {
 				stressBPM -= 0.5;
-			}
+			}*/
 		
+		}
+		
+		if (stressBPM >= 0)stressBPM -= 0.01;
+
+		if (isRuning == true) {
+			countRuning += DeltaTime;
+			if (countRuning >= maxCountRuning) {
+				stressBPM += 0.08f;
+			}
 		}
 	}
 
@@ -191,6 +200,7 @@ void AtestCharacter::MoveRunEnd() {
 	//Code for run action
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	isRuning = false;
+	countRuning = 0.0f;
 }
 
 void AtestCharacter::LookUp(float value) {
@@ -261,7 +271,8 @@ void AtestCharacter::Grabing() {
 		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
 
 		if ((*hitResult.GetComponent()->GetName() == FString("Cube") ||
-			 *hitResult.GetComponent()->GetName() == FString("Sac")) && PhyHandle->GrabbedComponent) {
+			 *hitResult.GetComponent()->GetName() == FString("Sac")) &&
+			 PhyHandle->GrabbedComponent) {
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
 		}
@@ -285,6 +296,17 @@ void AtestCharacter::Shoked(FRotator childRotation) {
 	SetActorRotation(NewRotationX);
 
 	isShoked = true;
+}
+
+void AtestCharacter::changeBPM(bool add, float number) {
+	if (add == true) {
+		stressBPM += number;
+		if (stressBPM >= 100.0f) { stressBPM = 100.0f; }
+	}
+	else {
+		stressBPM -= number;
+		if (stressBPM <= 0.0f) { stressBPM = 0.0f; }
+	}
 }
 
 // Called to bind functionality to input
