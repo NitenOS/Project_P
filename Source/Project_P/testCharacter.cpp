@@ -66,19 +66,33 @@ void AtestCharacter::Tick(float DeltaTime)
 		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, rotCam);
 	}
 
-	//Look left/right
-	{ 
-		FRotator NewRotationX = GetActorRotation();
-		NewRotationX.Yaw = CameraInput.X;
-		SetActorRotation(NewRotationX);
+	//camera 
+	{
+		//Look left/right
+		{
+			FRotator NewRotationX = GetActorRotation();
+			NewRotationX.Yaw = CameraInput.X;
+			SetActorRotation(NewRotationX);
+		}
+
+		//Look up/down
+		{
+			FRotator NewRotationY = Camera->GetRelativeRotation();
+			// Limit the rotation of the camera (not do a barrel roll)
+			NewRotationY.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
+			Camera->SetRelativeRotation(NewRotationY);
+		}
 	}
-	
-	//Look up/down
-	{ 
-		FRotator NewRotationY = Camera->GetRelativeRotation();
-		// Limit the rotation of the camera (not do a barrel roll)
-		NewRotationY.Pitch = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
-		Camera->SetRelativeRotation(NewRotationY);
+
+	if (isShoked == true) {
+		countShoked += DeltaTime;
+		
+		if(stressBPM <= 100) stressBPM += 1;
+		
+		if (countShoked >= maxCountShoked) {
+			isShoked = false;
+			countShoked = 0.0f;
+		}
 	}
 
 	// Stress jauge
@@ -180,13 +194,13 @@ void AtestCharacter::MoveRunEnd() {
 }
 
 void AtestCharacter::LookUp(float value) {
-	CameraInput.Y += value * cameraSpeed;
+	if (isShoked == false) CameraInput.Y += value * cameraSpeed;
 	// Limit the rotation of the camera (not do a barrel roll)
 	CameraInput.Y = FMath::Clamp(CameraInput.Y, -80.0f, 80.0f);
 }
 
 void AtestCharacter::LookSide(float value) {
-	CameraInput.X += value * cameraSpeed;
+	if (isShoked == false) CameraInput.X += value * cameraSpeed;
 	if (CameraInput.X < -360 || CameraInput.X > 360) { CameraInput.X = 0; }
 }
 
@@ -198,7 +212,7 @@ void AtestCharacter::HideBegin() {
 		UPrimitiveComponent* grabTemp = PhyHandle->GrabbedComponent;
 
 		PhyHandle->ReleaseComponent();
-		grabTemp->AddForce(FVector(Camera->GetForwardVector() * 1000.0 * 1000.0f * grabTemp->GetMass()));
+		grabTemp->AddForce(FVector(Camera->GetForwardVector() * YeetForce * 1000.0f * grabTemp->GetMass()));
 
 		isGrabed = false;
 	}
@@ -246,11 +260,31 @@ void AtestCharacter::Grabing() {
 
 		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
 
-		if (*hitResult.GetComponent()->GetName() == FString("Cube") && PhyHandle->GrabbedComponent) {
+		if ((*hitResult.GetComponent()->GetName() == FString("Cube") ||
+			 *hitResult.GetComponent()->GetName() == FString("Sac")) && PhyHandle->GrabbedComponent) {
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
 		}
 	}
+}
+
+void AtestCharacter::Shoked(FRotator childRotation) {
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, childRotation.ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, this->GetActorRotation().ToString());
+
+	FRotator newLook = childRotation - FRotator(0, 180, 0);
+
+
+	CameraInput.X = newLook.Yaw;
+
+	SetActorRotation(newLook);
+
+	FRotator NewRotationX = GetActorRotation();
+	NewRotationX.Yaw = CameraInput.X;
+	SetActorRotation(NewRotationX);
+
+	isShoked = true;
 }
 
 // Called to bind functionality to input

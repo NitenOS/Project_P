@@ -18,12 +18,23 @@ class PROJECT_P_API AfollowChild : public AchildBase
 public:
 	AfollowChild();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+	FVector goBack;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	AtestCharacter* mc;
 
+	bool searchPlayer = true;
+
+
+
+	bool goChild = false;
+	float countGo = 0.0f;
+	float maxCountGo = 5.0f;
+ 
 	bool FollowPlayer();
 
 

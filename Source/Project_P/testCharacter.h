@@ -9,6 +9,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Kismet/KismetMathLibrary.h" 
 #include "Kismet/GameplayStatics.h"
 #include "Delegates/Delegate.h"
 #include "adoChild.h"
@@ -88,6 +89,10 @@ protected:
 	float distance;
 	bool isGrabed = false;
 
+	bool isShoked = false;
+	float countShoked = 0.0f;
+	float maxCountShoked = 2.0f;
+
 	// Camera
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
@@ -129,4 +134,7 @@ public:
 	//UPROPERTY(BlueprintAssignable)
 	UFUNCTION(BlueprintCallable)
 		void Grabing();
+
+	UFUNCTION(BlueprintCallable)
+	void Shoked(FRotator childRotation);
 };
