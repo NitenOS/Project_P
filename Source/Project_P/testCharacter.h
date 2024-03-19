@@ -96,6 +96,8 @@ protected:
 	float maxCountShoked = 2.0f;
 
 	bool isHide = false;
+	float countHide = 0.0f;
+	const float maxCountHide = 2.0f;
 
 	// Camera
 	UPROPERTY(EditAnywhere)

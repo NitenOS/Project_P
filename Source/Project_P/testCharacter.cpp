@@ -113,6 +113,13 @@ void AtestCharacter::Tick(float DeltaTime)
 		if (stressBPM >= 0)stressBPM -= 0.01;
 
 		if (isRuning == true) {
+			countHide += DeltaTime;
+			if (countHide >= maxCountHide) {
+				stressBPM += 0.05f;
+			}
+		}
+
+		if (isHide == true) {
 			countRuning += DeltaTime;
 			if (countRuning >= maxCountRuning) {
 				stressBPM += 0.08f;
@@ -198,9 +205,11 @@ void AtestCharacter::MoveRunBegin() {
 
 void AtestCharacter::MoveRunEnd() {
 	//Code for run action
+
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	isRuning = false;
 	countRuning = 0.0f;
+
 }
 
 void AtestCharacter::LookUp(float value) {
@@ -239,6 +248,7 @@ void AtestCharacter::GrabBegin() {
 void AtestCharacter::GrabEnd() {
 	// Drop the item
 	if (isGrabed) {
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		//PhyHandle->ReleaseComponent();
 		//isGrabed = false;
 		UPrimitiveComponent* grabTemp = PhyHandle->GrabbedComponent;
@@ -274,6 +284,7 @@ void AtestCharacter::Grabing() {
 		if (*hitResult.GetComponent()->GetName() == FString("Cube") ||
 			*hitResult.GetComponent()->GetName() == FString("Sac") &&
 			PhyHandle->GrabbedComponent) {
+			GetCharacterMovement()->MaxWalkSpeed = walkSpeed/2;
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
 		}
