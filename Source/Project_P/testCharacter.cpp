@@ -258,23 +258,29 @@ void AtestCharacter::Grabing() {
 
 	collisionParams.AddIgnoredActor(this);
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("test clic")));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Grab clic")));
 
 
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 
 		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
 
 		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
 
-		if ((*hitResult.GetComponent()->GetName() == FString("Cube") ||
-			 *hitResult.GetComponent()->GetName() == FString("Sac")) &&
-			 PhyHandle->GrabbedComponent) {
+		//Grab item
+		if (*hitResult.GetComponent()->GetName() == FString("Cube") ||
+			*hitResult.GetComponent()->GetName() == FString("Sac") &&
+			PhyHandle->GrabbedComponent) {
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
+		}
+
+		//Hide item
+		if (*hitResult.GetComponent()->GetName() == FString("Table")){
+
 		}
 	}
 }
@@ -308,6 +314,46 @@ void AtestCharacter::changeBPM(bool add, float number) {
 		if (stressBPM <= 0.0f) { stressBPM = 0.0f; }
 	}
 }
+
+bool AtestCharacter::getIsHide() { return isHide; }
+
+void AtestCharacter::setIsHide(bool hide) { isHide = hide; }
+
+AActor* AtestCharacter::hideChar(AActor* choseOne) {
+	UPrimitiveComponent* hideComponent;
+
+	FHitResult hitResult;
+	FCollisionQueryParams collisionParams;
+	FCollisionResponseParams collisionResponse;
+
+	collisionParams.AddIgnoredActor(this);
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Hide clic")));
+
+
+	// Cast a single Line trace face of the cam 
+	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+
+		hideComponent = hitResult.GetComponent();
+
+		//PhyHandle->GrabComponentAtLocation(hideComponent, NAME_None, hitResult.Location);
+
+		//Hide item
+		if (*hitResult.GetComponent()->GetName() == FString("Table") || 
+			*hitResult.GetComponent()->GetName() == FString("porte1") ||
+			*hitResult.GetComponent()->GetName() == FString("porte2")) {
+
+			return hitResult.GetActor();
+		}
+	}
+	
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("Not a waiting component as ben hit !")));
+	return nullptr;
+}
+
+
 
 // Called to bind functionality to input
 void AtestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

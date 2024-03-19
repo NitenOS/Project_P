@@ -95,6 +95,7 @@ protected:
 	float countShoked = 0.0f;
 	float maxCountShoked = 2.0f;
 
+	bool isHide = false;
 
 	// Camera
 	UPROPERTY(EditAnywhere)
@@ -147,4 +148,13 @@ public:
 	* uncheck "add" for subtracte stressBPM
 	*/
 	void changeBPM(bool add, float number = 10);
+
+	UFUNCTION(BlueprintCallable)
+	bool getIsHide();
+	UFUNCTION(BlueprintCallable)
+	void setIsHide(bool hide);
+
+	UFUNCTION(BlueprintCallable)
+	UPARAM(DisplayName = "Hide component")
+	AActor* hideChar(AActor* choseOne);
 };

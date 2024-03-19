@@ -33,6 +33,10 @@ void AfollowChild::Tick(float DeltaTime) {
 		moveResult = MoveIA(goalLocation);
 	}
 
+	if (mc->getIsHide()) {
+		countGo = maxCountGo;
+	}
+
 	// Go child
 	if (goChild == true){
 		countGo += DeltaTime;
