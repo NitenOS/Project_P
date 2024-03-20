@@ -261,7 +261,7 @@ void AtestCharacter::GrabEnd() {
 
 }
 
-void AtestCharacter::Grabing() {
+bool AtestCharacter::Grabing() {
 	FHitResult hitResult;
 	FCollisionQueryParams collisionParams;
 	FCollisionResponseParams collisionResponse;
@@ -288,12 +288,14 @@ void AtestCharacter::Grabing() {
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
 		}
-
-		//Hide item
-		if (*hitResult.GetComponent()->GetName() == FString("Table")){
-
+		
+		//open door item
+		if (*hitResult.GetComponent()->GetName() == FString("Porte_Circle")){
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void AtestCharacter::Shoked(FRotator childRotation) {
@@ -354,7 +356,7 @@ AActor* AtestCharacter::hideChar(AActor* choseOne) {
 		//Hide item
 		if (*hitResult.GetComponent()->GetName() == FString("Table") || 
 			*hitResult.GetComponent()->GetName() == FString("porte1") ||
-			*hitResult.GetComponent()->GetName() == FString("porte2")) {
+			*hitResult.GetComponent()->GetName() == FString("porte2")){
 
 			return hitResult.GetActor();
 		}
@@ -363,7 +365,6 @@ AActor* AtestCharacter::hideChar(AActor* choseOne) {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("Not a waiting component as ben hit !")));
 	return nullptr;
 }
-
 
 
 // Called to bind functionality to input
@@ -389,5 +390,16 @@ void AtestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Grab
 	PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AtestCharacter::GrabBegin);
 	PlayerInputComponent->BindAction("Grab", IE_Released, this, &AtestCharacter::GrabEnd);
+
+	//Shit code
+	PlayerInputComponent->BindAction("resetBPM", IE_Pressed, this, &AtestCharacter::ResetBPM);
+	PlayerInputComponent->BindAction("popFollowChild", IE_Pressed, this, &AtestCharacter::PopFollowChild);
 }
 
+void AtestCharacter::ResetBPM() {
+	stressBPM = 0.0f;
+}
+
+void AtestCharacter::PopFollowChild() {
+
+}

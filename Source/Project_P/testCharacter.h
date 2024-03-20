@@ -127,6 +127,10 @@ protected:
 	void GrabBegin();
 	void GrabEnd();
 
+	// Shit code
+	void ResetBPM();
+	void PopFollowChild();
+
 
 
 
@@ -139,7 +143,7 @@ public:
 	
 	//UPROPERTY(BlueprintAssignable)
 	UFUNCTION(BlueprintCallable)
-		void Grabing();
+		bool Grabing();
 
 	UFUNCTION(BlueprintCallable)
 	void Shoked(FRotator childRotation);
