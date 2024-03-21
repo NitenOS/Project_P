@@ -186,21 +186,27 @@ void AtestCharacter::Tick(float DeltaTime)
 
 
 void AtestCharacter::MoveForward(float value) {
-	AddMovementInput(GetActorForwardVector(), value);
-	if (value == -1.0f || value == 1.0f) { isWalkingF = true;  }
-	else { isWalkingF = false; }
+	if (isShoked == false) {
+		AddMovementInput(GetActorForwardVector(), value);
+		if (value == -1.0f || value == 1.0f) { isWalkingF = true; }
+		else { isWalkingF = false; }
+	}
 }
 
 void AtestCharacter::MoveSide(float value) {
-	AddMovementInput(GetActorRightVector(), value);
-	if (value == -1.0f || value == 1.0f) { isWalkingD = true; }
-	else { isWalkingD = false; }
+	if (isShoked == false) {
+		AddMovementInput(GetActorRightVector(), value);
+		if (value == -1.0f || value == 1.0f) { isWalkingD = true; }
+		else { isWalkingD = false; }
+	}
 }
 
 void AtestCharacter::MoveRunBegin() {
 	//Code for run action
-	GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
-	isRuning = true;
+	if (isShoked == false) {
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
+		isRuning = true;
+	}
 }
 
 void AtestCharacter::MoveRunEnd() {
@@ -261,7 +267,7 @@ void AtestCharacter::GrabEnd() {
 
 }
 
-bool AtestCharacter::Grabing() {
+AActor* AtestCharacter::Grabing() {
 	FHitResult hitResult;
 	FCollisionQueryParams collisionParams;
 	FCollisionResponseParams collisionResponse;
@@ -291,11 +297,11 @@ bool AtestCharacter::Grabing() {
 		
 		//open door item
 		if (*hitResult.GetComponent()->GetName() == FString("Porte_Circle")){
-			return true;
+			return hitResult.GetActor();
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 void AtestCharacter::Shoked(FRotator childRotation) {

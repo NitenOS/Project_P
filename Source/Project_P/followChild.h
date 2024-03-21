@@ -35,7 +35,7 @@ protected:
 
 	bool goChild = false;
 	float countGo = 0.0f;
-	float maxCountGo = 5.0f;
+	float maxCountGo = 2.0f;
  
 	bool FollowPlayer();
 

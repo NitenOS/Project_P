@@ -143,7 +143,7 @@ public:
 	
 	//UPROPERTY(BlueprintAssignable)
 	UFUNCTION(BlueprintCallable)
-		bool Grabing();
+	AActor* Grabing();
 
 	UFUNCTION(BlueprintCallable)
 	void Shoked(FRotator childRotation);
