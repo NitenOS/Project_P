@@ -20,6 +20,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 	FVector goBack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+	FVector goHidle;
 
 protected:
 	// Called when the game starts or when spawned

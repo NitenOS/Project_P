@@ -45,15 +45,22 @@ void AfollowChild::Tick(float DeltaTime) {
 		}
 	}
 
+
 	// Timer end back
 	if (countGo >= maxCountGo && goChild == false) {
 		setGoalLocation(FNavLocation(goBack));
 		moveResult = MoveIA(goalLocation);
-		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) { this->Destroy(); }
+		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
+
+			//this->Destroy();
+			this->SetActorLocation(goHidle);
+			countGo = 0.0f;
+			searchPlayer = true;
+			FollowPlayer();
+			moveResult = MoveIA(goalLocation);
+		}
 	}
-
-	
-
 }
 
 bool AfollowChild::FollowPlayer() {
