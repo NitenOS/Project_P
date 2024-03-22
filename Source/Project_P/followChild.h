@@ -39,7 +39,7 @@ protected:
 	// footstep var
 	int numFootstep = 0;
 	float footstepcount = 0.0f;
-	float maxFootstepCount = 0.2f;
+	float maxFootstepCount = 0.3f;
 
 
 	bool goChild = false;
