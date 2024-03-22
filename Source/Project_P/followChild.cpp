@@ -34,7 +34,7 @@ void AfollowChild::Tick(float DeltaTime) {
 	//Search player
 	if (searchPlayer == true){
 		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString(TEXT("On a trouvé le MC")));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString(TEXT("On a trouvé le MC")));
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, GetTargetLocation().ToString());
 			mc->Shoked(this->GetActorRotation());
 			goChild = true;
@@ -62,7 +62,7 @@ void AfollowChild::Tick(float DeltaTime) {
 		setGoalLocation(FNavLocation(goBack));
 		moveResult = MoveIA(goalLocation);
 		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
 
 			//this->Destroy();
 			this->SetActorLocation(goHidle);
@@ -72,7 +72,7 @@ void AfollowChild::Tick(float DeltaTime) {
 			moveResult = MoveIA(goalLocation);
 		}
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::SanitizeFloat(isChasing));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::SanitizeFloat(isChasing));
 
 	// Footstep 
 	{

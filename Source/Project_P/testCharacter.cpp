@@ -182,6 +182,10 @@ void AtestCharacter::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	if( stressBPM >= 100 ){
+		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+	}
 }
 
 
@@ -275,13 +279,13 @@ AActor* AtestCharacter::Grabing() {
 
 	collisionParams.AddIgnoredActor(this);
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Grab clic")));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Grab clic")));
 
 
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 
 		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
 
@@ -307,8 +311,8 @@ AActor* AtestCharacter::Grabing() {
 
 void AtestCharacter::Shoked(FRotator childRotation) {
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, childRotation.ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, this->GetActorRotation().ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, childRotation.ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, this->GetActorRotation().ToString());
 
 	FRotator newLook = childRotation - FRotator(0, 180, 0);
 
@@ -348,13 +352,13 @@ AActor* AtestCharacter::hideChar(AActor* choseOne) {
 
 	collisionParams.AddIgnoredActor(this);
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Hide clic")));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Hide clic")));
 
 
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 
 		hideComponent = hitResult.GetComponent();
 
@@ -369,7 +373,7 @@ AActor* AtestCharacter::hideChar(AActor* choseOne) {
 		}
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("Not a waiting component as ben hit !")));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString::Printf(TEXT("Not a waiting component as ben hit !")));
 	return nullptr;
 }
 

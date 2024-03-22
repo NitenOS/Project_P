@@ -60,10 +60,10 @@ void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 {
 	switch (Result) {
 	case EPathFollowingRequestResult::Failed:
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request failed")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request failed")));
 		break;
 	case EPathFollowingRequestResult::AlreadyAtGoal:
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Already at Goal !")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Already at Goal !")));
 
 		oldNavPoint = navPointCount;
 
@@ -74,14 +74,14 @@ void AchildBase::OnMoveCompleted(EPathFollowingRequestResult::Type Result)
 			navPointCount = FMath::RandRange(0, navPoints.Num() - 1);
 		} while (navPointCount == oldNavPoint);
 		
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(navPointCount)));
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(oldNavPoint)));
+		//->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(navPointCount)));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString(FString::SanitizeFloat(oldNavPoint)));
 
 		moveResult = MoveIA(goalLocation);
 		break;
 
 	case EPathFollowingRequestResult::RequestSuccessful:
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request Succes !")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString(TEXT("Request Succes !")));
 		break;
 	}
 }
