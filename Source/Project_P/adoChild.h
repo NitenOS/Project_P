@@ -22,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CPP Seting")
-	float adoWaitTime = 5.0f;
+	float adoWaitTime = 15.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CPP Seting")
 	float test;
 

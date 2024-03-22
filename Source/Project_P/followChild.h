@@ -22,6 +22,11 @@ public:
 	FVector goBack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 	FVector goHidle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+	bool isChasing = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
+	TArray<USoundBase*> footsteps;
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,6 +36,10 @@ protected:
 
 	bool searchPlayer = true;
 
+	// footstep var
+	int numFootstep = 0;
+	float footstepcount = 0.0f;
+	float maxFootstepCount = 0.2f;
 
 
 	bool goChild = false;
@@ -38,6 +47,12 @@ protected:
 	float maxCountGo = 2.0f;
  
 	bool FollowPlayer();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+	UAudioComponent* MusicChase;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+	UAudioComponent* WalkSFX;
 
 
 public:

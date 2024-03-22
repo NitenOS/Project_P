@@ -34,5 +34,4 @@ void AadoChild::Tick(float DeltaTime) {
 
 		count = 0;
 	}
-
 }

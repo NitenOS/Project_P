@@ -186,32 +186,33 @@ void AtestCharacter::Tick(float DeltaTime)
 
 
 void AtestCharacter::MoveForward(float value) {
-	if (isShoked == false) {
-		AddMovementInput(GetActorForwardVector(), value);
-		if (value == -1.0f || value == 1.0f) { isWalkingF = true; }
-		else { isWalkingF = false; }
-	}
+	if (isShoked == true) { return; }
+	AddMovementInput(GetActorForwardVector(), value);
+	if (value == -1.0f || value == 1.0f) { isWalkingF = true; }
+	else { isWalkingF = false; }
+
 }
 
 void AtestCharacter::MoveSide(float value) {
-	if (isShoked == false) {
-		AddMovementInput(GetActorRightVector(), value);
-		if (value == -1.0f || value == 1.0f) { isWalkingD = true; }
-		else { isWalkingD = false; }
-	}
+	if (isShoked == true) {	return; }
+	AddMovementInput(GetActorRightVector(), value);
+	if (value == -1.0f || value == 1.0f) { isWalkingD = true; }
+	else { isWalkingD = false; }
 }
 
 void AtestCharacter::MoveRunBegin() {
 	//Code for run action
-	if (isShoked == false) {
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
-		isRuning = true;
-	}
+	if (isShoked == true || isGrabed == true) { return; }
+
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
+	isRuning = true;
+	
 }
 
 void AtestCharacter::MoveRunEnd() {
 	//Code for run action
 
+	if (isShoked == true || isGrabed == true) { return; }
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	isRuning = false;
 	countRuning = 0.0f;
