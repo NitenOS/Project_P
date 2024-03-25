@@ -135,6 +135,8 @@ protected:
 	void ResetBPM();
 	void ChangeForm();
 
+	bool goTransform = false;
+	float countTransform = 0.0f;
 
 
 

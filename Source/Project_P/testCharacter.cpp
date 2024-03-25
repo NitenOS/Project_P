@@ -200,6 +200,21 @@ void AtestCharacter::Tick(float DeltaTime)
 	if( stressBPM >= 100 ){
 		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
+
+	if (goTransform) {
+		countTransform += DeltaTime;
+		if (!humainForm && countTransform <= 1.0f) {
+			Camera->FieldOfView = 90 + (20 * countTransform);
+			Camera->PostProcessSettings.VignetteIntensity = countTransform;
+			Camera->PostProcessSettings.AutoExposureBias = 3.0f * countTransform;
+			if (countTransform >= 1.0f) {
+				countTransform = 1.0f;
+				goTransform = false;
+			}
+		} else {
+
+		}
+	}
 }
 
 
@@ -440,9 +455,10 @@ void AtestCharacter::ChangeForm() {
 	if (humainForm == false) {
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 3;
 		YeetForce = 1500;
-		Camera->FieldOfView = 110;
-		Camera->PostProcessSettings.VignetteIntensity = 1.0f;
-		Camera->PostProcessSettings.AutoExposureBias = 3.0f;
+		//Camera->FieldOfView = 110;
+		//Camera->PostProcessSettings.VignetteIntensity = 1.0f;
+		//Camera->PostProcessSettings.AutoExposureBias = 3.0f;
+		goTransform = true;
 		stressBPM = 0.1f;
 		isShoked = false;
 	} else {
