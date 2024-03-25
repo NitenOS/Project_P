@@ -31,6 +31,7 @@ void AfollowChild::BeginPlay() {
 void AfollowChild::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	if (mc->humainForm) {
+		MusicChase->SetVolumeMultiplier(0.4f);
 		//Search player
 		if (searchPlayer == true) {
 			if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
@@ -74,7 +75,7 @@ void AfollowChild::Tick(float DeltaTime) {
 		}
 		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::SanitizeFloat(isChasing));
 	} else {
-
+		MusicChase->SetVolumeMultiplier(0.0f);
 		goalLocation = FNavLocation(navPoints[navPointCount]);
 		moveResult = MoveIA(goalLocation);
 		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
@@ -88,7 +89,7 @@ void AfollowChild::Tick(float DeltaTime) {
 	} 
 	if (mc->grabChild == false) {
 		capsulComponent->SetSimulatePhysics(false);
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
 	}
 
 

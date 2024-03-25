@@ -64,7 +64,8 @@ protected:
 		TArray<USoundBase*> footsteps;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
 		TArray<USoundBase*> heartBeat;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+		TArray<USoundBase*> Breathing;
 
 
 

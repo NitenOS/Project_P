@@ -171,8 +171,14 @@ void AtestCharacter::Tick(float DeltaTime)
 
 		// Breathing || stressBPM 100 max
 		{
-			HeartSFX->Sound = heartBeat[numHeartbeat];
-			heartbeatCount += DeltaTime;
+			if (humainForm) {
+				HeartSFX->Sound = heartBeat[numHeartbeat];
+				heartbeatCount += DeltaTime;
+			}
+			else {
+				HeartSFX->Sound = Breathing[numHeartbeat];
+				heartbeatCount += DeltaTime/4;
+			}
 
 			actualHeartBeatCount = maxHeartbeatCount - 0.7f * (stressBPM / 100.0f);
 			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(actualHeartBeatCount));
@@ -181,7 +187,8 @@ void AtestCharacter::Tick(float DeltaTime)
 			if (heartbeatCount >= actualHeartBeatCount) {
 				numHeartbeat += 1;
 
-				if (numHeartbeat >= heartBeat.Num()) { numHeartbeat = 0; }
+				if (humainForm) if (numHeartbeat >= heartBeat.Num()) { numHeartbeat = 0; }
+				if (!humainForm) if (numHeartbeat >= Breathing.Num()) { numHeartbeat = 0; }
 
 				HeartSFX->Play();
 				heartbeatCount = 0.0f;
@@ -201,18 +208,27 @@ void AtestCharacter::Tick(float DeltaTime)
 		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(countTransform));
+
 	if (goTransform) {
-		countTransform += DeltaTime;
-		if (!humainForm && countTransform <= 1.0f) {
+		countTransform += DeltaTime * 2;
+		if (!humainForm) {
 			Camera->FieldOfView = 90 + (20 * countTransform);
 			Camera->PostProcessSettings.VignetteIntensity = countTransform;
 			Camera->PostProcessSettings.AutoExposureBias = 3.0f * countTransform;
 			if (countTransform >= 1.0f) {
-				countTransform = 1.0f;
+				countTransform = 0.0f;
 				goTransform = false;
 			}
-		} else {
-
+		} 
+		if (humainForm){
+			Camera->FieldOfView = 110 - (20 * countTransform);
+			Camera->PostProcessSettings.VignetteIntensity = 1.0f - countTransform;
+			Camera->PostProcessSettings.AutoExposureBias = 3.0f - 3.0f * countTransform;
+			if (countTransform >= 1.0f) {
+				countTransform = 0.0f;
+				goTransform = false;
+			}
 		}
 	}
 }
@@ -464,9 +480,10 @@ void AtestCharacter::ChangeForm() {
 	} else {
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		YeetForce = saveYeetForce;
-		Camera->FieldOfView = saveFieldOfView;
-		Camera->PostProcessSettings.VignetteIntensity = 0;
-		Camera->PostProcessSettings.AutoExposureBias = 0.0f;
+		//Camera->FieldOfView = saveFieldOfView;
+		//Camera->PostProcessSettings.VignetteIntensity = 0;
+		//Camera->PostProcessSettings.AutoExposureBias = 0.0f;
+		goTransform = true;
 		stressBPM = 1.0f;
 	}
 }
