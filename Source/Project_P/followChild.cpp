@@ -83,6 +83,14 @@ void AfollowChild::Tick(float DeltaTime) {
 		}
 	}
 
+	if (mc->grabChild) {
+		capsulComponent->SetSimulatePhysics(true);
+	} 
+	if (mc->grabChild == false) {
+		capsulComponent->SetSimulatePhysics(false);
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
+	}
+
 
 	// Footstep 
 	{

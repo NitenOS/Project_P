@@ -142,6 +142,7 @@ void AtestCharacter::Tick(float DeltaTime)
 	{
 		if (isGrabed) {
 			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 100 + Camera->GetComponentLocation());
+			//PhyHandle->SetTargetLocationAndRotation(Camera->GetForwardVector() * 100 + Camera->GetComponentLocation(), GetActorRotation());
 		}
 	}
 
@@ -188,6 +189,14 @@ void AtestCharacter::Tick(float DeltaTime)
 		}
 	}
 
+	if (!isGrabed && grabChild) {
+		CountGrab += DeltaTime;
+		if (CountGrab >= 1.0f) {
+			CountGrab = 0.0f;
+			grabChild = false;
+		}
+	}
+
 	if( stressBPM >= 100 ){
 		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
@@ -227,7 +236,6 @@ void AtestCharacter::MoveRunEnd() {
 	if (!humainForm) GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 3;
 	isRuning = false;
 	countRuning = 0.0f;
-
 }
 
 void AtestCharacter::LookUp(float value) {
@@ -251,6 +259,7 @@ void AtestCharacter::Yeet() {
 		PhyHandle->ReleaseComponent();
 		grabTemp->AddForce(FVector(Camera->GetForwardVector() * YeetForce * 1000.0f * grabTemp->GetMass()));
 
+		grabChild = false;
 		isGrabed = false;
 	}
 }
@@ -266,7 +275,7 @@ void AtestCharacter::GrabBegin() {
 void AtestCharacter::GrabEnd() {
 	// Drop the item
 	if (isGrabed) {
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+		if(humainForm) GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		//PhyHandle->ReleaseComponent();
 		//isGrabed = false;
 		UPrimitiveComponent* grabTemp = PhyHandle->GrabbedComponent;
@@ -275,6 +284,7 @@ void AtestCharacter::GrabEnd() {
 		grabTemp->AddForce(FVector(Camera->GetForwardVector() * 1000.0f* grabTemp->GetMass()));
 		
 		isGrabed = false;
+		//grabChild = false;
 	}
 
 }
@@ -292,7 +302,7 @@ AActor* AtestCharacter::Grabing() {
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetActor()->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
 
 		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
 
@@ -305,6 +315,13 @@ AActor* AtestCharacter::Grabing() {
 			GetCharacterMovement()->MaxWalkSpeed = walkSpeed/2;
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
+		}
+
+		if (*hitResult.GetComponent()->GetName() == FString("CollisionCylinder") &&
+			PhyHandle->GrabbedComponent && !humainForm) {
+			//PhyHandle->SetTargetLocation(hitResult.Location);
+			isGrabed = true;
+			grabChild = true;
 		}
 		
 		//open door item

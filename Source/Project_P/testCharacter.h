@@ -102,6 +102,8 @@ protected:
 	float countHide = 0.0f;
 	const float maxCountHide = 2.0f;
 
+	float CountGrab = 0.0f;
+
 	// Camera
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* Camera;
@@ -159,6 +161,10 @@ public:
 	* uncheck "add" for subtracte stressBPM
 	*/
 	void changeBPM(bool add, float number = 10);
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool grabChild = false;
 
 	UFUNCTION(BlueprintCallable)
 	bool getIsHide();

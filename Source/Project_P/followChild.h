@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "childBase.h"
 #include "testCharacter.h"
+#include "Components/CapsuleComponent.h" 
 #include "followChild.generated.h"
+
 
 /**
  * 
@@ -32,6 +34,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ChildDeplacement)
 	AtestCharacter* mc;
 
 	bool searchPlayer = true;
@@ -53,6 +56,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
 	UAudioComponent* WalkSFX;
+
+	UCapsuleComponent* capsulComponent = GetCapsuleComponent();
 
 
 public:
