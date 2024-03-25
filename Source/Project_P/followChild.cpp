@@ -30,49 +30,59 @@ void AfollowChild::BeginPlay() {
 
 void AfollowChild::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
-	//Search player
-	if (searchPlayer == true){
-		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString(TEXT("On a trouvé le MC")));
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, GetTargetLocation().ToString());
-			mc->Shoked(this->GetActorRotation());
-			goChild = true;
-			searchPlayer = false;
-		}
-		FollowPlayer();
-		moveResult = MoveIA(goalLocation);
-	}
-
-	if (mc->getIsHide()) {
-		countGo = maxCountGo;
-	}
-
-	// Go child
-	if (goChild == true){
-		countGo += DeltaTime;
-		if (countGo >= maxCountGo) {
-			goChild = false;
-		}
-	}
-
-	// Timer end back
-	if (countGo >= maxCountGo && goChild == false) {
-		isChasing = false;
-		setGoalLocation(FNavLocation(goBack));
-		moveResult = MoveIA(goalLocation);
-		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
-			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
-
-			//this->Destroy();
-			this->SetActorLocation(goHidle);
-			countGo = 0.0f;
-			searchPlayer = true;
+	if (mc->humainForm) {
+		//Search player
+		if (searchPlayer == true) {
+			if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
+				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString(TEXT("On a trouvé le MC")));
+				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, GetTargetLocation().ToString());
+				mc->Shoked(this->GetActorRotation());
+				goChild = true;
+				searchPlayer = false;
+			}
 			FollowPlayer();
 			moveResult = MoveIA(goalLocation);
 		}
+
+		if (mc->getIsHide()) {
+			countGo = maxCountGo;
+		}
+
+		// Go child
+		if (goChild == true) {
+			countGo += DeltaTime;
+			if (countGo >= maxCountGo) {
+				goChild = false;
+			}
+		}
+
+		// Timer end back
+		if (countGo >= maxCountGo && goChild == false) {
+			isChasing = false;
+			setGoalLocation(FNavLocation(goBack));
+			moveResult = MoveIA(goalLocation);
+			if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
+				//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("test")));
+
+				//this->Destroy();
+				this->SetActorLocation(goHidle);
+				countGo = 0.0f;
+				searchPlayer = true;
+				FollowPlayer();
+				moveResult = MoveIA(goalLocation);
+			}
+		}
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::SanitizeFloat(isChasing));
+	} else {
+
+		goalLocation = FNavLocation(navPoints[navPointCount]);
+		moveResult = MoveIA(goalLocation);
+		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
+			moveResult = MoveIA(goalLocation);
+			OnMoveCompleted(moveResult);
+		}
 	}
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::SanitizeFloat(isChasing));
+
 
 	// Footstep 
 	{

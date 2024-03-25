@@ -51,6 +51,8 @@ protected:
 	/** base YeetForce (addForce) on start (max 800) (base : 500.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		float YeetForce = 500.0f;
+		float saveYeetForce = 0.0f; 
+		float saveFieldOfView = 0.0f;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
@@ -62,6 +64,7 @@ protected:
 		TArray<USoundBase*> footsteps;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
 		TArray<USoundBase*> heartBeat;
+
 
 
 
@@ -100,7 +103,7 @@ protected:
 	const float maxCountHide = 2.0f;
 
 	// Camera
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* Camera;
 	UPROPERTY(EditAnywhere)
 	UPhysicsHandleComponent* PhyHandle;
@@ -120,7 +123,6 @@ protected:
 	void LookSide(float value);
 
 	// Hide function
-	void HideBegin();
 	void HideEnd();
 
 	// Grab function
@@ -129,7 +131,7 @@ protected:
 
 	// Shit code
 	void ResetBPM();
-	void PopFollowChild();
+	void ChangeForm();
 
 
 
@@ -145,6 +147,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* Grabing();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+	bool humainForm = true;
+
 	UFUNCTION(BlueprintCallable)
 	void Shoked(FRotator childRotation);
 
@@ -159,6 +164,9 @@ public:
 	bool getIsHide();
 	UFUNCTION(BlueprintCallable)
 	void setIsHide(bool hide);
+
+	UFUNCTION(BlueprintCallable)
+	void Yeet();
 
 	UFUNCTION(BlueprintCallable)
 	UPARAM(DisplayName = "Hide component")

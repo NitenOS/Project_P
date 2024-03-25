@@ -41,6 +41,9 @@ void AtestCharacter::BeginPlay()
 	// Set the base speed for the character (600 is base speed)
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
+	saveYeetForce = YeetForce;
+	saveFieldOfView = Camera->FieldOfView;
+
 	adoclass = UGameplayStatics::GetActorOfClass(gameWorld, AadoChild::StaticClass());
 	ado = Cast<AadoChild>(adoclass);
 
@@ -84,7 +87,7 @@ void AtestCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	if (isShoked == true) {
+	if (isShoked == true && humainForm) {
 		countShoked += DeltaTime;
 		
 		if(stressBPM <= 100) stressBPM += 0.3f;
@@ -97,7 +100,7 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	// Stress jauge
 	{
-		if (ado != nullptr) {
+		if (ado != nullptr && humainForm) {
 			distance = GetDistanceTo(ado);
 			//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, FString::SanitizeFloat(distance));
 		
@@ -112,14 +115,14 @@ void AtestCharacter::Tick(float DeltaTime)
 		
 		if (stressBPM >= 0)stressBPM -= 0.01;
 
-		if (isRuning == true) {
+		if (isRuning == true && humainForm) {
 			countHide += DeltaTime;
 			if (countHide >= maxCountHide) {
 				stressBPM += 0.05f;
 			}
 		}
 
-		if (isHide == true) {
+		if (isHide == true && humainForm) {
 			countRuning += DeltaTime;
 			if (countRuning >= maxCountRuning) {
 				stressBPM += 0.08f;
@@ -129,14 +132,16 @@ void AtestCharacter::Tick(float DeltaTime)
 
 	// Camera FX
 	{
-		Camera->PostProcessSettings.VignetteIntensity = 3 * stressBPM * 0.01;
-		Camera->PostProcessSettings.FilmGrainIntensity = 10 * stressBPM * 0.01;
+		if (humainForm) {
+			Camera->PostProcessSettings.VignetteIntensity = 3 * stressBPM * 0.01;
+			Camera->PostProcessSettings.FilmGrainIntensity = 10 * stressBPM * 0.01;
+		}
 	}
 
 	// Grab system
 	{
 		if (isGrabed) {
-			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 200 + Camera->GetComponentLocation());
+			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 100 + Camera->GetComponentLocation());
 		}
 	}
 
@@ -209,6 +214,7 @@ void AtestCharacter::MoveRunBegin() {
 	if (isShoked == true || isGrabed == true) { return; }
 
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed;
+	if (!humainForm) GetCharacterMovement()->MaxWalkSpeed = walkSpeed * runSpeed * 3;
 	isRuning = true;
 	
 }
@@ -218,6 +224,7 @@ void AtestCharacter::MoveRunEnd() {
 
 	if (isShoked == true || isGrabed == true) { return; }
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	if (!humainForm) GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 3;
 	isRuning = false;
 	countRuning = 0.0f;
 
@@ -234,7 +241,7 @@ void AtestCharacter::LookSide(float value) {
 	if (CameraInput.X < -360 || CameraInput.X > 360) { CameraInput.X = 0; }
 }
 
-void AtestCharacter::HideBegin() {
+void AtestCharacter::Yeet() {
 	//Code for begin hide action
 	if (isGrabed) {
 		//PhyHandle->ReleaseComponent();
@@ -285,16 +292,16 @@ AActor* AtestCharacter::Grabing() {
 	// Cast a single Line trace face of the cam 
 	if (gameWorld->LineTraceSingleByChannel(hitResult, Camera->GetComponentLocation(), Camera->GetForwardVector() * 500 + Camera->GetComponentLocation(), ECC_WorldStatic, collisionParams, collisionResponse))
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetComponent()->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("The Component Being Hit is: %s"), *hitResult.GetActor()->GetName()));
 
 		UPrimitiveComponent* ComponentToGrab = hitResult.GetComponent();
 
 		PhyHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, hitResult.Location);
 
 		//Grab item
-		if (*hitResult.GetComponent()->GetName() == FString("Cube") ||
-			*hitResult.GetComponent()->GetName() == FString("Sac") &&
-			PhyHandle->GrabbedComponent) {
+		if ((*hitResult.GetComponent()->GetName() == FString("Cube") ||
+			*hitResult.GetComponent()->GetName() == FString("Sac")) &&
+			PhyHandle->GrabbedComponent && humainForm) {
 			GetCharacterMovement()->MaxWalkSpeed = walkSpeed/2;
 			//PhyHandle->SetTargetLocation(hitResult.Location);
 			isGrabed = true;
@@ -395,7 +402,7 @@ void AtestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookYawAxis", this, &AtestCharacter::LookSide);
 
 	// Hide
-	PlayerInputComponent->BindAction("Hide", IE_Pressed, this, &AtestCharacter::HideBegin);
+	//PlayerInputComponent->BindAction("Hide", IE_Pressed, this, &AtestCharacter::Yeet);
 	PlayerInputComponent->BindAction("Hide", IE_Released, this, &AtestCharacter::HideEnd);
 
 	// Grab
@@ -404,13 +411,29 @@ void AtestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	//Shit code
 	PlayerInputComponent->BindAction("resetBPM", IE_Pressed, this, &AtestCharacter::ResetBPM);
-	PlayerInputComponent->BindAction("popFollowChild", IE_Pressed, this, &AtestCharacter::PopFollowChild);
+	PlayerInputComponent->BindAction("ChangeForm", IE_Pressed, this, &AtestCharacter::ChangeForm);
 }
 
 void AtestCharacter::ResetBPM() {
 	stressBPM = 0.0f;
 }
 
-void AtestCharacter::PopFollowChild() {
-
+void AtestCharacter::ChangeForm() {
+	humainForm = !humainForm;
+	if (humainForm == false) {
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 3;
+		YeetForce = 1500;
+		Camera->FieldOfView = 110;
+		Camera->PostProcessSettings.VignetteIntensity = 1.0f;
+		Camera->PostProcessSettings.AutoExposureBias = 3.0f;
+		stressBPM = 0.1f;
+		isShoked = false;
+	} else {
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+		YeetForce = saveYeetForce;
+		Camera->FieldOfView = saveFieldOfView;
+		Camera->PostProcessSettings.VignetteIntensity = 0;
+		Camera->PostProcessSettings.AutoExposureBias = 0.0f;
+		stressBPM = 1.0f;
+	}
 }
