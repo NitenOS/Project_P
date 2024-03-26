@@ -76,6 +76,7 @@ protected:
 	float maxFootstepCount = 0.8f;
 
 	// heartbeat var
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
 	int numHeartbeat = 0;
 	float heartbeatCount = 0.0f;
 	float actualHeartBeatCount = 1.5f;

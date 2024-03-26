@@ -477,6 +477,7 @@ void AtestCharacter::ChangeForm() {
 		goTransform = true;
 		stressBPM = 0.1f;
 		isShoked = false;
+		numHeartbeat = 0;
 	} else {
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 		YeetForce = saveYeetForce;
@@ -485,5 +486,6 @@ void AtestCharacter::ChangeForm() {
 		//Camera->PostProcessSettings.AutoExposureBias = 0.0f;
 		goTransform = true;
 		stressBPM = 1.0f;
+		numHeartbeat = 0;
 	}
 }
