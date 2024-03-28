@@ -15,6 +15,10 @@ AfollowChild::AfollowChild() {
 	MusicChase = CreateDefaultSubobject<UAudioComponent>(TEXT("musicChase"));
 	MusicChase->SetRelativeLocation(FVector(0.0f, 0.0f, -30.0f));
 	MusicChase->SetupAttachment(RootComponent);
+
+	screenSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("screenSFX"));
+	screenSFX->SetRelativeLocation(FVector(0.0f, 0.0f, -30.0f));
+	screenSFX->SetupAttachment(RootComponent);
 }
 
 void AfollowChild::BeginPlay() {
@@ -38,6 +42,7 @@ void AfollowChild::Tick(float DeltaTime) {
 				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString(TEXT("On a trouvé le MC")));
 				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, GetTargetLocation().ToString());
 				mc->Shoked(this->GetActorRotation());
+				screenSFX->Play();
 				goChild = true;
 				searchPlayer = false;
 			}

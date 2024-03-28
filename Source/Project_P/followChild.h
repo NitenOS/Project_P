@@ -55,6 +55,9 @@ protected:
 	UAudioComponent* MusicChase;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
+	UAudioComponent* screenSFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPSound)
 	UAudioComponent* WalkSFX;
 
 	UCapsuleComponent* capsulComponent = GetCapsuleComponent();
