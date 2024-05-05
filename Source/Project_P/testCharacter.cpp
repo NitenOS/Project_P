@@ -208,7 +208,7 @@ void AtestCharacter::Tick(float DeltaTime)
 		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(countTransform));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(countTransform));
 
 	if (goTransform) {
 		countTransform += DeltaTime * 2;
