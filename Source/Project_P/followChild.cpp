@@ -85,12 +85,19 @@ void AfollowChild::Tick(float DeltaTime) {
 		moveResult = MoveIA(goalLocation);
 		if (moveResult == EPathFollowingRequestResult::AlreadyAtGoal) {
 			moveResult = MoveIA(goalLocation);
+			setGoalLocation(FNavLocation(goBack));
 			OnMoveCompleted(moveResult);
 		}
 	}
 
 	if (mc->grabChild) {
 		capsulComponent->SetSimulatePhysics(true);
+		if (mc->GetIsGrabed() == true) {
+			setGoalLocation(FNavLocation(mc->GetHandlePos()));
+			moveResult = MoveIA(goalLocation);
+
+			//this->SetActorLocation(mc->GetHandlePos());
+		}
 	} 
 	if (mc->grabChild == false) {
 		capsulComponent->SetSimulatePhysics(false);

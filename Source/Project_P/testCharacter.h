@@ -185,4 +185,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeForm();
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetHandlePos();
+
+	bool GetIsGrabed();
+
 };

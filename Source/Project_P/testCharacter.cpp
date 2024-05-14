@@ -489,3 +489,13 @@ void AtestCharacter::ChangeForm() {
 		numHeartbeat = 0;
 	}
 }
+
+FVector AtestCharacter::GetHandlePos()
+{
+	return Camera->GetForwardVector() * 100 + Camera->GetComponentLocation();
+}
+
+bool AtestCharacter::GetIsGrabed()
+{
+	return isGrabed;
+}
