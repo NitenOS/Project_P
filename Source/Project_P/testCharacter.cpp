@@ -48,7 +48,7 @@ void AtestCharacter::BeginPlay()
 	ado = Cast<AadoChild>(adoclass);
 
 	// Check value
-	if (stressBPM > 100.0f) { stressBPM = 100.0f; }
+	if (stressBPM > maxBPM) { stressBPM = maxBPM; }
 	if (YeetForce > 800.0f) { YeetForce = 800.0f; }
 
 	//Camera->SetRelativeRotation(FQuat(0.0f));
@@ -90,7 +90,7 @@ void AtestCharacter::Tick(float DeltaTime)
 	if (isShoked == true && humainForm) {
 		countShoked += DeltaTime;
 		
-		if(stressBPM <= 100) stressBPM += 0.3f;
+		if(stressBPM <= maxBPM) stressBPM += 0.3f;
 		
 		if (countShoked >= maxCountShoked) {
 			isShoked = false;
@@ -104,8 +104,8 @@ void AtestCharacter::Tick(float DeltaTime)
 			distance = GetDistanceTo(ado);
 			//GEngine->AddOnScreenDebugMessage(-1, 0.10f, FColor::Blue, FString::SanitizeFloat(distance));
 		
-			if (distance <= maxDistanceAdo && stressBPM <= 100) {
-				stressBPM += 0.5;
+			if (distance <= maxDistanceAdo && stressBPM <= maxBPM) {
+				stressBPM += 0.2;
 			}
 			/*if (distance >= maxDistanceAdo && stressBPM >= 0) {
 				stressBPM -= 0.5;
@@ -118,7 +118,7 @@ void AtestCharacter::Tick(float DeltaTime)
 		if (isRuning == true && humainForm) {
 			countHide += DeltaTime;
 			if (countHide >= maxCountHide) {
-				stressBPM += 0.05f;
+				stressBPM += 0.02f;
 			}
 		}
 
@@ -133,8 +133,8 @@ void AtestCharacter::Tick(float DeltaTime)
 	// Camera FX
 	{
 		if (humainForm) {
-			Camera->PostProcessSettings.VignetteIntensity = 3 * stressBPM * 0.01;
-			Camera->PostProcessSettings.FilmGrainIntensity = 10 * stressBPM * 0.01;
+			Camera->PostProcessSettings.VignetteIntensity = 2 * stressBPM * 0.01;
+			Camera->PostProcessSettings.FilmGrainIntensity = 8 * stressBPM * 0.01;
 		}
 	}
 
@@ -142,6 +142,7 @@ void AtestCharacter::Tick(float DeltaTime)
 	{
 		if (isGrabed) {
 			PhyHandle->SetTargetLocation(Camera->GetForwardVector() * 100 + Camera->GetComponentLocation());
+			//PhyHandle->SetTargetRotation(FRotator(0));
 			//PhyHandle->SetTargetLocationAndRotation(Camera->GetForwardVector() * 100 + Camera->GetComponentLocation(), GetActorRotation());
 		}
 	}
@@ -180,7 +181,7 @@ void AtestCharacter::Tick(float DeltaTime)
 				heartbeatCount += DeltaTime/4;
 			}
 
-			actualHeartBeatCount = maxHeartbeatCount - 0.7f * (stressBPM / 100.0f);
+			actualHeartBeatCount = maxHeartbeatCount - 0.7f * (stressBPM / maxBPM);
 			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(actualHeartBeatCount));
 
 
@@ -204,7 +205,7 @@ void AtestCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	if( stressBPM >= 100 ){
+	if( stressBPM >= maxBPM){
 		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 
@@ -386,7 +387,7 @@ void AtestCharacter::Shoked(FRotator childRotation) {
 void AtestCharacter::changeBPM(bool add, float number) {
 	if (add == true) {
 		stressBPM += number;
-		if (stressBPM >= 100.0f) { stressBPM = 100.0f; }
+		if (stressBPM >= maxBPM) { stressBPM = maxBPM; }
 	}
 	else {
 		stressBPM -= number;
@@ -469,7 +470,7 @@ void AtestCharacter::ResetBPM() {
 void AtestCharacter::ChangeForm() {
 	humainForm = !humainForm;
 	if (humainForm == false) {
-		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 3;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed * 1.5;
 		YeetForce = 1500;
 		//Camera->FieldOfView = 110;
 		//Camera->PostProcessSettings.VignetteIntensity = 1.0f;

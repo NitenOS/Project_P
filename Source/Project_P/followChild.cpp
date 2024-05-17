@@ -95,7 +95,7 @@ void AfollowChild::Tick(float DeltaTime) {
 		if (mc->GetIsGrabed() == true) {
 			setGoalLocation(FNavLocation(mc->GetHandlePos()));
 			moveResult = MoveIA(goalLocation);
-
+			//SetActorRotation(FRotator(0));
 			//this->SetActorLocation(mc->GetHandlePos());
 		}
 	} 

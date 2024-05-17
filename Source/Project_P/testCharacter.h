@@ -32,19 +32,22 @@ protected:
 	// Simplifier Speed character
 	/** Multiply the walk speed (base : 600.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
-		float walkSpeed = 600;
+		float walkSpeed = 250;
 	/** Multiply the walk speed when press shift (base : walkSpeed) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
-		float runSpeed = 2;
+		float runSpeed = 1.5;
 	/** Speed of the mouse (base : 5.0f) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPMovement)
-		float cameraSpeed = 5;
+		float cameraSpeed = 1.2f;
 
 
 
 	/** base BPM (jauge) on start (max 100) (base : 1.0f) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		float stressBPM = 1.0f;
+	/** max BPM (jauge) (base 100)*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = CPPJauge)
+		float maxBPM = 80.0f;
 	/** max distance from ado to start up BPM (jauge) (base : 500 (int)) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CPPJauge)
 		int maxDistanceAdo = 500;
